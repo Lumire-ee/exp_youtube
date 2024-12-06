@@ -26,6 +26,7 @@ import VideoList from './components/VideoList';
 // };
 
 function App() {
+<<<<<<< HEAD
   const [videos, setVideos] = useState([]);
 
   useEffect(() => {
@@ -60,6 +61,12 @@ function App() {
         <h1>youtube video app</h1>
         <VideoList videos={videos} />
       </div>
+=======
+  return (
+    <>
+      <div>초기설정</div>
+      <div>브랜치 설정</div>
+>>>>>>> 55194f6 (브랜치 설정 확인)
     </>
   );
 }
