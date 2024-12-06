@@ -49,4 +49,19 @@
 ### 4-2 작업 후
 - 다시 한번 검토 후 PR을 생성해주세요
 
+# 5. 설치 및 실행 방법
+1. 레포지토리 클론:
+   ```bash
+   git clone <repository-url>
+   ```
+2. 패키지 설치
+   ```bash
+   npm install
+   ```
+3. 개발 서버 실행
+   ```bash
+   npm start
+   ```
+
+
 
