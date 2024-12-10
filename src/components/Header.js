@@ -1,9 +1,22 @@
 import { Menu, Youtube, Search, Bell, User, ArrowLeft } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+import CategorySlider from './CategorySlider';
 
 function Header() {
   const [showSearch, setShowSearch] = useState(false); // 검색창 표시 상태
   const [isLargeScreen, setIsLargeScreen] = useState(false); // 화면 크기 상태
+  const categories = [
+    '전체',
+    '게임',
+    '뉴스',
+    '음악',
+    '믹스',
+    '스케치 코미디',
+    '요리 프로그램',
+    '최근에 업로드된 동영상',
+    '감상한 동영상',
+    '새로운 맞춤 동영상',
+  ];
 
   useEffect(() => {
     // 화면 크기 변경 감지
@@ -14,7 +27,7 @@ function Header() {
       }
     };
 
-    handleResize(); // 초기 실행
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -24,7 +37,6 @@ function Header() {
       <header className="flex items-center justify-between px-4 py-2">
         {/* Left Section: 로고 및 메뉴 */}
         <div className="mr-5 flex items-center">
-          {/* 640px 미만일 때 검색창이 열려있으면 뒤로가기 버튼 추가 */}
           {showSearch && !isLargeScreen ? (
             <button onClick={() => setShowSearch(false)} className="sm:hidden">
               <ArrowLeft size={24} className="cursor-pointer text-grayDark" />
@@ -32,18 +44,16 @@ function Header() {
           ) : (
             <Menu size={24} className="mr-4 cursor-pointer text-grayDark" />
           )}
-          {/* 검색창이 열려있지 않으면 로고와 메뉴 표시 */}
           {!showSearch && (
             <div className="flex items-center">
               <Youtube size={24} className="cursor-pointer text-red" />
-              <h1 className="text-lg font-semibold text-black">YouTube</h1>
+              <h1 className="ml-2 text-lg font-semibold text-black">YouTube</h1>
             </div>
           )}
         </div>
 
         {/* Center Section: 검색창 */}
         {isLargeScreen || showSearch ? (
-          // 640px 이상이거나 검색 버튼이 눌려있을때 검색창 표시
           <div className="mr-5 flex w-full max-w-3xl rounded-full border border-grayLighter">
             <input
               type="text"
@@ -61,17 +71,19 @@ function Header() {
 
         {/* Right Section: 검색 버튼, 알림 및 사용자 아이콘 */}
         <div className="flex items-center">
-          {/* 640px 미만일 때 검색 버튼 표시 */}
           <button
             onClick={() => setShowSearch(true)}
             className="mr-3 sm:hidden"
           >
             <Search size={24} className="cursor-pointer text-grayDark" />
           </button>
-          <Bell size={24} className="mr-3 cursor-pointer text-grayDark" />
+          <Bell size={24} className="mr-6 cursor-pointer text-grayDark" />
           <User size={24} className="mr-3 cursor-pointer text-grayDark" />
         </div>
       </header>
+
+      {/* Category Slider: 카테고리 버튼, 양옆 슬라이드 */}
+      <CategorySlider categories={categories} />
     </div>
   );
 }
