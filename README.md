@@ -1,71 +1,68 @@
-# Getting Started with Create React App
+# 1. Git 브랜치 생성 및 사용 가이드
+### 1-1 브랜치 생성
+- 새로운 작업을 시작할 때 **반드시 브랜치를 생성**해주세요
+- 브랜치 생성 명령어:
+  ```bash
+  git checkout -b <브랜치명>
+  ```
+예시: git checkout -b feat/jaehun
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### 1-2 브랜치 네이밍 규칙
+- 기능 개발: feat/<이름>
+- 코드 구조 변경: refactor/<이름>
+- 버그 수정: fix/<이름>
+- 기타 작업: chore/<이름>
 
-## Available Scripts
+# 2. 커밋 규칙
+### 2-1 작업 단위로 커밋
+- 작업 완료 후, **작업 단위**로 커밋을 작성해주세요
+- 커밋 메시지 규칙 **[feat]**, **[style]**, **[chore]** 등 접두사를 활용해주세요
+  >접두사를 제외한 내용은 한글로 작성해주세요
 
-In the project directory, you can run:
+# 3. Pull Request(PR) 규칙
+### 3-1 PR 생성 방법
+- GitHub에서 **Pull Request** 탭으로 이동 -> **New Pull Request** 클릭
+- PR 제목과 설명을 작성해주세요
+  ```bash
+  - 검색창 UI 구현
+  - YouTube API 연동 및 검색 결과 표시 기능 추가
+  ```
+### 3-2 PR 병합
+- 코드 리뷰가 완료되면 **dev** 브랜치로 병합 후 다시 한번 검토 후 **main** 브랜치로 병합하겠습니다
+- 병합이 완료되면 브랜치를 정리해주세요
+- 로컬 브랜치 삭제
+  ```bash
+  git branch -d <브랜치명>
+  ```
+- 원격 브랜치 삭제
+  ```bash
+  git push origin --delete <브랜치명>
+  ```
 
-### `npm start`
+# 4. 작업 전/후 체크리스트
+### 4-1 작업 전
+- 시작 전에 항상 **최신 상태로 동기화** 해주세요
+  ```bash
+  git pull origin dev
+  또는
+  git pull origin main
+  ```
+### 4-2 작업 후
+- 다시 한번 검토 후 PR을 생성해주세요
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+# 5. 설치 및 실행 방법
+1. 레포지토리 클론:
+   ```bash
+   git clone <repository-url>
+   ```
+2. 패키지 설치
+   ```bash
+   npm install
+   ```
+3. 개발 서버 실행
+   ```bash
+   npm start
+   ```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-# exp_youtube
