@@ -17,11 +17,7 @@ export const getVideos = async (endpoint, params = {}) => {
 };
 
 function App() {
-  return (
-    <>
-      <div>초기설정</div>
-    </>
-  );
+  return <></>;
 }
 
 export default App;
