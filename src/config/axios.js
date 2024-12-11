@@ -5,7 +5,11 @@ export default axios.create({
     params: {
       part: "snippet",
       maxResults: 20,
+<<<<<<< HEAD
       key: // Replace with your API key
+=======
+      key: "AIzaSyDABToFV3rpOZFbJ5TZ6aMD5ABbwEJ6WPE", // Replace with your API key
+>>>>>>> 3c3d224 (feat/home iframe 구현)
     },
   });
 
