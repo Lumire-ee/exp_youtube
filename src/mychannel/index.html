@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>my channel</title>
+  <link rel="stylesheet" href="mychannel_styles.css">
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <img class="menu" src="images/align-justify.svg">
+      <img class="logo" src="images/youtube.svg" >
+    </div>
+    <div class="header-middle">
+      <input type="text" id="search-bar" placeholder="검색">
+      <button class="search-button">
+        <img class="search-icon" src="images/search.svg">
+      </button>
+      <button class="voice-saerch">
+        <img class="voice-saerch-icon" src="images/mic.svg">
+      </button>
+    </div>
+    <div class="header-right">
+      <img class="profile-icon" id="profile-icon" src="images/circle-user-round.svg" >
+    </div>
+  </header>
+
+  <div id="profile-menu" class="hidden">
+    <div class="profile-info">
+      <img class="profile-icon-large" src="images/circle-user-round.svg" >
+      <p>@사용자1</p>
+      <a href="#" onclick="navigateTo('home')">내 채널 보기</a>
+    </div>
+    <ul>
+      <a href="#">Google 계정</a><br>
+      <a href="#">계정 전환</a><br>
+      <a href="#">로그아웃</a><br>
+      <a href="#">설정</a>
+    </ul>
+  </div>
+
+  <nav>
+    <button onclick="navigateTo('home')">홈</button>
+    <button onclick="navigateTo('videos')">동영상</button>
+    <button onclick="navigateTo('community')">커뮤니티</button>
+  </nav>
+
+  <main id="main-content">
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
