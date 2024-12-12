@@ -1,18 +1,24 @@
 import { Menu, Youtube, Search, Bell, User, ArrowLeft } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import CategorySlider from './CategorySlider';
+import Sidebar from './Sidebar';
 
 function Header() {
   const [showSearch, setShowSearch] = useState(false); // 검색창 표시 상태
   const [isLargeScreen, setIsLargeScreen] = useState(false); // 화면 크기 상태
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // 사이드바 표시 상태
+
+  console.log(isSidebarOpen);
+
   const categories = [
     '전체',
     '게임',
-    '뉴스',
     '음악',
+    '뉴스',
     '믹스',
-    '스케치 코미디',
-    '요리 프로그램',
+    '시트콤',
+    '힙합',
+    '요리',
     '최근에 업로드된 동영상',
     '감상한 동영상',
     '새로운 맞춤 동영상',
@@ -34,6 +40,25 @@ function Header() {
 
   return (
     <div className="sticky top-0 z-50 bg-white">
+      {/* Overlay */}
+      <div
+        className={`fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 ${
+          isSidebarOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
+        }`}
+        onClick={() => setIsSidebarOpen(false)}
+      ></div>
+
+      {/* Sidebar Container (항상 DOM상에 존재) */}
+      <div
+        className={`fixed left-0 top-0 z-50 h-full w-60 overflow-y-auto bg-white transition-transform duration-300 
+        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+      >
+        <Sidebar
+          isSidebarOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
+        />
+      </div>
+
       <header className="flex items-center justify-between px-4 py-2">
         {/* Left Section: 로고 및 메뉴 */}
         <div className="mr-5 flex items-center">
@@ -42,7 +67,9 @@ function Header() {
               <ArrowLeft size={24} className="cursor-pointer text-grayDark" />
             </button>
           ) : (
-            <Menu size={24} className="mr-4 cursor-pointer text-grayDark" />
+            <button onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+              <Menu size={24} className="mr-4 cursor-pointer text-grayDark" />
+            </button>
           )}
           {!showSearch && (
             <div className="flex items-center">
