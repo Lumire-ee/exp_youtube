@@ -1,7 +1,6 @@
-import React, {useState, useEffect} from "react";
+import { useEffect } from 'react';
 import { API_KEY, BASE_URL } from './config/api';
 import axios from 'axios';
-import VideoList from './components/VideoList';
 
 export const getVideos = async (endpoint, params = {}) => {
   try {
@@ -19,32 +18,22 @@ export const getVideos = async (endpoint, params = {}) => {
 };
 
 function App() {
-  const [videos, setVideos] = useState([]);
-
   useEffect(() => {
+    getVideos('videos', {
+      part: 'snippet',
+      chart: 'mostPopular',
+      regionCode: 'KR',
+      maxResults: 10,
+    })
+      .then((data) => {
+        console.log('videos list', data.items);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
-    onTermSubmit('react');
-  },[]);
-
-  const onTermSubmit = async (term) => {
-    const response = await youtube.get('/search',{
-      params: {
-        q: term,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Failed to fetch data:', error);
-    throw error;
-  }
-};
-
-function App() {
-  return (
-    <>
-      <div>초기설정</div>
-    </>
-  );
+  return <></>;
 }
 
 export default App;

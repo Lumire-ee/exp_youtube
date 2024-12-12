@@ -8,9 +8,9 @@ const VideoItem = ({ video }) => {
     const videoUrl = `https://www.youtube.com/embed/${video.id.videoId}`;
     
     return (
-        <div className="flex flex-col items-center justify-center bg-white rounded-lg shadow-md w-full h-full max-w-md md:max-w-lg min-h-full">
+        <div className="flex size-full min-h-full max-w-md flex-col items-center justify-center rounded-lg bg-white shadow-md md:max-w-lg">
           <iframe
-            className="w-full h-64 sm:h-full md:h-full lg:h-full rounded-lg object-cover"
+            className="h-64 w-full rounded-lg object-cover sm:h-full md:h-full lg:h-full"
             src={videoUrl}
             title={video.snippet.title}
             frameBorder="0"
@@ -19,7 +19,7 @@ const VideoItem = ({ video }) => {
           />
           
           <div className="text-center">
-            <div className="font-bold text-xl text-gray-900">
+            <div className="text-xl font-bold text-gray-900">
               {video.snippet.title || 'Untitled'}
             </div>
           </div>
