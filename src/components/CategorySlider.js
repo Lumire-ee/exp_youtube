@@ -80,9 +80,10 @@ function CategorySlider() {
       {showArrows && (
         <button
           onClick={scrollRight}
-          className="rounded-full p-2 hover:bg-grayLighter"
+          // eslint-disable-next-line tailwindcss/no-custom-classname
+          className="hover:bg-grayLighter rounded-full p-2"
         >
-          <ChevronRight size={24} className="cursor-pointer text-grayDark" />
+          <ChevronRight size={24} className="text-grayDark cursor-pointer" />
         </button>
       )}
     </div>
