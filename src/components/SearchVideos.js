@@ -32,7 +32,6 @@ function SearchVideos({
       onSearch(searchTerm);
       setShowHistory(false);
     }
-    console.log('검색어', searchTerm);
   };
 
   const handleHistoryClick = (query) => {
@@ -47,7 +46,6 @@ function SearchVideos({
       className="relative mx-4 flex w-full max-w-3xl rounded-full border border-grayLighter"
     >
       <form
-        onClick={() => setShowHistory(true)}
         onSubmit={handleSearch}
         className="flex w-full items-center rounded-full focus:border-bluePrimary focus:outline-none sm:text-base"
       >
@@ -60,11 +58,9 @@ function SearchVideos({
         <input
           type="text"
           placeholder="검색"
-          value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setShowHistory(true);
-          }}
+          value={searchTerm} // 입력된 검색어 상태
+          onChange={(e) => setSearchTerm(e.target.value)} // 검색어 업데이트
+          onFocus={() => setShowHistory(true)} // 입력 필드 포커스 시 드롭다운 열기
           className="grow rounded-l-full border-0 border-grayLighter px-4 py-2 text-medium "
         />
         <button
@@ -105,6 +101,14 @@ function SearchVideos({
               </li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {showHistory && searchHistory.length === 0 && (
+        <div className="absolute left-0 top-full z-10 mt-1 w-full rounded-medium bg-white">
+          <p className="px-4 py-2 text-medium text-grayDark">
+            검색 기록이 없습니다
+          </p>
         </div>
       )}
     </div>
