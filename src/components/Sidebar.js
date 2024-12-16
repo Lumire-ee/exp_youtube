@@ -44,8 +44,6 @@ const MenuSection = ({ title, items }) => (
 );
 
 function Sidebar({ onClose, isSidebarOpen }) {
-  console.log('Sidebar 컴포넌트로 전달된 isOpen 상태:', isSidebarOpen);
-
   const mainMenu = [
     { label: '홈', icon: <House size={20} /> },
     { label: '구독', icon: <UserPlus size={20} /> },

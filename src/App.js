@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react';
 import { API_KEY, BASE_URL } from './config/api';
 import axios from 'axios';
 import VideoList from './components/VideoList';
+import Header from './components/Header';
+import YoutubeVideos from './components/YoutubeVideos';
+import Aside from './components/Aside';
+import CategorySlider from './components/CategorySlider';
 
 //video, channel api 추가
 export const getVideosWithChannel = async (params = {}) => {
@@ -42,7 +46,6 @@ export const getVideosWithChannel = async (params = {}) => {
 function App() {
   const [videos, setVideos] = useState([]);
 
-
   useEffect(() => {
     getVideosWithChannel({
       part: 'snippet,contentDetails,statistics',
@@ -60,11 +63,20 @@ function App() {
   }, []);
 
   return (
-  <>
-  <VideoList 
+    return (
+    <div className="flex min-h-screen flex-col">
+      <Header />
+      <div className="flex flex-1">
+        <Aside />
+        <div className="flex flex-1 flex-col">
+          <CategorySlider />
+          <YoutubeVideos />
+        </div>
+      </div>
+     <VideoList 
     videos={videos}
   />
-  </>
+    </div>
   );
 }
 

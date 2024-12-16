@@ -1,10 +1,24 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-function CategorySlider({ categories }) {
+function CategorySlider() {
   const [selectedCategory, setSelectedCategory] = useState('전체');
   const [showArrows, setShowArrows] = useState(false);
   const categoryRef = useRef(null);
+
+  const categories = [
+    '전체',
+    '게임',
+    '음악',
+    '뉴스',
+    '믹스',
+    '시트콤',
+    '힙합',
+    '요리',
+    '최근에 업로드된 동영상',
+    '감상한 동영상',
+    '새로운 맞춤 동영상',
+  ];
 
   useEffect(() => {
     const checkOverflow = () => {
