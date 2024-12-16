@@ -1,56 +1,52 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { API_KEY } from '../config/api';
+import { searchVideos, getVideoDetails, getChannelDetails } from '../api';
+import VideoItem from './VideoItem';
 
 const YoutubeVideos = ({ searchQuery = '' }) => {
-  // 기본값은 빈 문자열
   const [videos, setVideos] = useState([]);
 
   useEffect(() => {
-    const fetchVideos = async () => {
+    const fetchSearchedVideos = async () => {
       if (!searchQuery.trim()) {
-        setVideos([]); // 검색어가 없을 경우 빈 결과
+        setVideos([]);
         return;
       }
 
       try {
-        const response = await axios.get(
-          'https://www.googleapis.com/youtube/v3/search',
-          {
-            params: {
-              part: 'snippet',
-              type: 'video',
-              regionCode: 'KR',
-              maxResults: 30,
-              q: searchQuery,
-              key: API_KEY,
-            },
-          },
+        // 1. search 엔드포인트로 videoId 목록 가져오기
+        const searchResults = await searchVideos(searchQuery, 30);
+        const videoIds = searchResults.map((item) => item.id.videoId);
+
+        // 2. videoId로 videos 엔드포인트 호출
+        const videoDetails = await getVideoDetails(videoIds);
+
+        // 3. 각 videoDetail에 대해 channelId로 채널 썸네일 조회
+        const detailedVideos = await Promise.all(
+          videoDetails.map(async (video) => {
+            const channelId = video.snippet.channelId;
+            const channelData = await getChannelDetails(channelId);
+            const channelThumbnail = channelData.snippet.thumbnails.default.url;
+            return { ...video, channelThumbnail };
+          }),
         );
-        setVideos(response.data.items);
+
+        setVideos(detailedVideos);
       } catch (err) {
         console.log(err);
       }
     };
 
-    if (searchQuery.trim() !== '') {
-      fetchVideos(); // 검색어가 있을 경우만 API 호출
-    }
+    fetchSearchedVideos();
   }, [searchQuery]);
 
   return (
     <div>
       {console.log('비디오 검색결과:', videos)}
-      <main className="p-4">
-        <h1 className="text-xxLarge font-bold">메인 콘텐츠</h1>
-        <div className="space-y-4">
-          {Array.from({ length: 50 }, (_, index) => (
-            <p key={index} className="text-grayDark">
-              스크롤 테스트용 더미 콘텐츠 {index + 1}
-            </p>
-          ))}
-        </div>
-      </main>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {videos.map((video) => (
+          <VideoItem key={video.id.videoId || video.id} video={video} />
+        ))}
+      </div>
     </div>
   );
 };
