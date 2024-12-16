@@ -3,6 +3,7 @@ import { API_KEY, BASE_URL } from './config/api';
 import axios from 'axios';
 import VideoList from './components/VideoList';
 
+
 //video, channel api 추가
 export const getVideosWithChannel = async (params = {}) => {
   try {
@@ -48,7 +49,7 @@ function App() {
       part: 'snippet,contentDetails,statistics',
       chart: 'mostPopular',
       regionCode: 'KR',
-      maxResults: 20,//영상 갯수 조절
+      maxResults: 30,//영상 갯수 조절
     })
       .then((data) => {
         console.log('videos list', data);
@@ -59,11 +60,14 @@ function App() {
       });
   }, []);
 
+  
+
   return (
   <>
   <VideoList 
     videos={videos}
   />
+
   </>
   );
 }
