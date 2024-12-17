@@ -15,9 +15,6 @@ function CategorySlider() {
     '시트콤',
     '힙합',
     '요리',
-    '최근에 업로드된 동영상',
-    '감상한 동영상',
-    '새로운 맞춤 동영상',
   ];
 
   useEffect(() => {
@@ -67,8 +64,7 @@ function CategorySlider() {
           <button
             key={index}
             onClick={() => handleCategoryClick(category)}
-            // eslint-disable-next-line tailwindcss/no-custom-classname
-            className={`shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-sm ${
+            className={`shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-medium ${
               selectedCategory === category
                 ? 'bg-black text-white'
                 : 'bg-grayLightest text-grayDark hover:bg-grayLighter'
@@ -81,10 +77,9 @@ function CategorySlider() {
       {showArrows && (
         <button
           onClick={scrollRight}
-          // eslint-disable-next-line tailwindcss/no-custom-classname
-          className="hover:bg-grayLighter rounded-full p-2"
+          className="rounded-full p-2 hover:bg-grayLighter"
         >
-          <ChevronRight size={24} className="text-grayDark cursor-pointer" />
+          <ChevronRight size={24} className="cursor-pointer text-grayDark" />
         </button>
       )}
     </div>
