@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'; // 페이지 이동을 위한 useNavigate 추가
 import {
   House,
   Folders,
@@ -15,9 +16,6 @@ import {
   Smile,
   Mic,
   ChefHat,
-  Upload,
-  Eye,
-  Star,
   Settings,
   AlertTriangle,
   HelpCircle,
@@ -26,7 +24,7 @@ import {
   UserPlus,
 } from 'lucide-react';
 
-const MenuSection = ({ title, items }) => (
+const MenuSection = ({ title, items, onMenuClick }) => (
   <div className="mb-4">
     {title && <p className="px-4 py-2 text-large text-grayDark">{title}</p>}
     <ul>
@@ -34,6 +32,7 @@ const MenuSection = ({ title, items }) => (
         <li
           key={label}
           className="flex cursor-pointer items-center px-4 py-2 hover:rounded-large hover:bg-gray-100"
+          onClick={() => onMenuClick(label)} // 클릭 이벤트 추가
         >
           <span className="mr-6">{icon}</span>
           <p className="text-medium">{label}</p>
@@ -44,7 +43,7 @@ const MenuSection = ({ title, items }) => (
 );
 
 function Sidebar({ onClose, isSidebarOpen }) {
-  console.log('Sidebar 컴포넌트로 전달된 isOpen 상태:', isSidebarOpen);
+  const navigate = useNavigate(); // 페이지 이동을 위한 useNavigate
 
   const mainMenu = [
     { label: '홈', icon: <House size={20} /> },
@@ -68,9 +67,6 @@ function Sidebar({ onClose, isSidebarOpen }) {
     { label: '시트콤', icon: <Smile size={20} /> },
     { label: '힙합', icon: <Mic size={20} /> },
     { label: '요리', icon: <ChefHat size={20} /> },
-    { label: '최근에 업로드된 동영상', icon: <Upload size={20} /> },
-    { label: '감상한 동영상', icon: <Eye size={20} /> },
-    { label: '새로운 맞춤 동영상', icon: <Star size={20} /> },
   ];
 
   const settingsMenu = [
@@ -79,6 +75,13 @@ function Sidebar({ onClose, isSidebarOpen }) {
     { label: '고객센터', icon: <HelpCircle size={20} /> },
     { label: '의견 보내기', icon: <Send size={20} /> },
   ];
+
+  // 메뉴 클릭 이벤트 핸들러
+  const handleMenuClick = (label) => {
+    if (label === '내 동영상') {
+      navigate('/'); // MyChannel 페이지로 이동
+    }
+  };
 
   return (
     <div className="px-3">
@@ -96,13 +99,14 @@ function Sidebar({ onClose, isSidebarOpen }) {
         </div>
       </div>
 
-      <MenuSection items={mainMenu} />
+      {/* 메뉴 섹션 */}
+      <MenuSection items={mainMenu} onMenuClick={() => {}} />
       <hr className="mb-4 border-grayLighter" />
-      <MenuSection title="내 페이지" items={myPageMenu} />
+      <MenuSection title="내 페이지" items={myPageMenu} onMenuClick={handleMenuClick} />
       <hr className="mb-4 border-grayLighter" />
-      <MenuSection title="카테고리" items={categoriesMenu} />
+      <MenuSection title="카테고리" items={categoriesMenu} onMenuClick={() => {}} />
       <hr className="mb-4 border-grayLighter" />
-      <MenuSection items={settingsMenu} />
+      <MenuSection items={settingsMenu} onMenuClick={() => {}} />
       <hr className="mb-4 border-grayLighter" />
       <footer className="px-4 py-2 text-small text-grayDark">
         대충 회사 정보

@@ -60,6 +60,7 @@ function CategorySlider({ categories }) {
             }`}
           >
             {category}
+            
           </button>
         ))}
       </div>

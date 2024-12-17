@@ -19,5 +19,3 @@ export const getVideos = async (endpoint, params = {}) => {
 function App() {
   return <></>;
 }
-
-export default App;
