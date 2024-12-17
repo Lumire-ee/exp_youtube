@@ -15,9 +15,6 @@ import {
   Smile,
   Mic,
   ChefHat,
-  Upload,
-  Eye,
-  Star,
   Settings,
   AlertTriangle,
   HelpCircle,
@@ -44,8 +41,6 @@ const MenuSection = ({ title, items }) => (
 );
 
 function Sidebar({ onClose, isSidebarOpen }) {
-  console.log('Sidebar 컴포넌트로 전달된 isOpen 상태:', isSidebarOpen);
-
   const mainMenu = [
     { label: '홈', icon: <House size={20} /> },
     { label: '구독', icon: <UserPlus size={20} /> },
@@ -68,9 +63,6 @@ function Sidebar({ onClose, isSidebarOpen }) {
     { label: '시트콤', icon: <Smile size={20} /> },
     { label: '힙합', icon: <Mic size={20} /> },
     { label: '요리', icon: <ChefHat size={20} /> },
-    { label: '최근에 업로드된 동영상', icon: <Upload size={20} /> },
-    { label: '감상한 동영상', icon: <Eye size={20} /> },
-    { label: '새로운 맞춤 동영상', icon: <Star size={20} /> },
   ];
 
   const settingsMenu = [
