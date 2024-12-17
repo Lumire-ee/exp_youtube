@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+
 import Header from './components/Header';
 import Aside from './components/Aside';
 import CategorySlider from './components/CategorySlider';
@@ -6,6 +7,7 @@ import YoutubeVideos from './components/YoutubeVideos';
 
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('전체');
   const [selectedCategory, setSelectedCategory] = useState('전체');
   const [searchHistory, setSearchHistory] = useState([]);
 
@@ -30,11 +32,18 @@ function App() {
   const handleSearch = (query) => {
     setSearchQuery(query);
     setSelectedCategory('');
+    setSelectedCategory('');
 
     if (!searchHistory.includes(query)) {
       const updatedHistory = [query, ...searchHistory].slice(0, 10);
       setSearchHistory(updatedHistory);
     }
+  };
+
+  // 카테고리 선택
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+    setSearchQuery('');
   };
 
   // 카테고리 선택
@@ -56,10 +65,18 @@ function App() {
         searchHistory={searchHistory}
         onDeleteHistory={handleDeleteHistory}
         onCategorySelect={handleCategorySelect}
+        onCategorySelect={handleCategorySelect}
       />
       <div className="flex flex-1">
         <Aside />
         <div className="flex flex-1 flex-col overflow-hidden">
+          <CategorySlider onCategorySelect={handleCategorySelect} />
+          <div className="flex-1 overflow-auto p-4">
+            <YoutubeVideos
+              searchQuery={searchQuery}
+              category={selectedCategory}
+            />
+          </div>
           <CategorySlider onCategorySelect={handleCategorySelect} />
           <div className="flex-1 overflow-auto p-4">
             <YoutubeVideos
