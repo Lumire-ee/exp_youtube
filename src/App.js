@@ -1,38 +1,14 @@
 import { useEffect, useState } from 'react';
 
-import VideoItem from './components/VideoItem';
 import Header from './components/Header';
 import Aside from './components/Aside';
 import CategorySlider from './components/CategorySlider';
 import YoutubeVideos from './components/YoutubeVideos';
 
-import { getMostPopularVideos, getChannelDetails } from './api';
-
 function App() {
-  const [videos, setVideos] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('전체');
   const [searchHistory, setSearchHistory] = useState([]);
-
-  // 비디오 데이터 가져오기
-  useEffect(() => {
-    (async () => {
-      try {
-        const data = await getMostPopularVideos(20);
-        // 각 비디오별 채널 썸네일 추가
-        const detailedVideos = await Promise.all(
-          data.map(async (video) => {
-            const channelId = video.snippet.channelId;
-            const channelData = await getChannelDetails(channelId);
-            const channelThumbnail = channelData.snippet.thumbnails.default.url;
-            return { ...video, channelThumbnail };
-          }),
-        );
-        setVideos(detailedVideos);
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  }, []);
 
   // 로컬스토리지에서 검색 기록 불러오기
   useEffect(() => {
@@ -54,11 +30,18 @@ function App() {
   // 검색 실행
   const handleSearch = (query) => {
     setSearchQuery(query);
+    setSelectedCategory('');
 
     if (!searchHistory.includes(query)) {
       const updatedHistory = [query, ...searchHistory].slice(0, 10);
       setSearchHistory(updatedHistory);
     }
+  };
+
+  // 카테고리 선택
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+    setSearchQuery('');
   };
 
   // 검색 기록 삭제
@@ -73,23 +56,18 @@ function App() {
         onSearch={handleSearch}
         searchHistory={searchHistory}
         onDeleteHistory={handleDeleteHistory}
+        onCategorySelect={handleCategorySelect}
       />
       <div className="flex flex-1">
         <Aside />
         <div className="flex flex-1 flex-col overflow-hidden">
-          <CategorySlider onCategorySelect={handleSearch} />
-          {searchQuery.trim() === '' ? (
-            <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {videos.map((video) => (
-                <VideoItem key={video.id.videoId || video.id} video={video} />
-              ))}
-            </div>
-          ) : (
-            // 검색 결과 컴포넌트
-            <div className="p-4">
-              <YoutubeVideos searchQuery={searchQuery} />
-            </div>
-          )}
+          <CategorySlider onCategorySelect={handleCategorySelect} />
+          <div className="flex-1 overflow-auto p-4">
+            <YoutubeVideos
+              searchQuery={searchQuery}
+              category={selectedCategory}
+            />
+          </div>
         </div>
       </div>
     </div>

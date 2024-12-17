@@ -1,43 +1,61 @@
 import React, { useEffect, useState } from 'react';
-import { searchVideos, getVideoDetails, getChannelDetails } from '../api';
+import {
+  searchVideos,
+  getMostPopularVideos,
+  getVideoDetails,
+  getChannelDetails,
+} from '../api';
 import VideoItem from './VideoItem';
 
-const YoutubeVideos = ({ searchQuery = '' }) => {
+const YoutubeVideos = ({ searchQuery = '', category = '' }) => {
   const [videos, setVideos] = useState([]);
 
   useEffect(() => {
-    const fetchSearchedVideos = async () => {
-      if (!searchQuery.trim()) {
-        setVideos([]);
-        return;
-      }
-
+    const fetchVideos = async () => {
       try {
-        // 1. search 엔드포인트로 videoId 목록 가져오기
-        const searchResults = await searchVideos(searchQuery, 30);
-        const videoIds = searchResults.map((item) => item.id.videoId);
+        let videoIds = [];
+        let searchResults = [];
 
-        // 2. videoId로 videos 엔드포인트 호출
-        const videoDetails = await getVideoDetails(videoIds);
+        // 검색어, 카테고리 또는 인기 비디오를 가져오는 조건
+        if (searchQuery.trim() !== '') {
+          searchResults = await searchVideos(searchQuery, 20);
+        } else if (category && category !== '전체') {
+          searchResults = await searchVideos(category, 20);
+        } else {
+          searchResults = await getMostPopularVideos(20);
+        }
 
-        // 3. 각 videoDetail에 대해 channelId로 채널 썸네일 조회
-        const detailedVideos = await Promise.all(
-          videoDetails.map(async (video) => {
-            const channelId = video.snippet.channelId;
-            const channelData = await getChannelDetails(channelId);
-            const channelThumbnail = channelData.snippet.thumbnails.default.url;
-            return { ...video, channelThumbnail };
-          }),
-        );
+        // 비디오 ID 추출 및 유효성 필터링
+        videoIds = searchResults
+          .map((item) => item.id.videoId || item.id) // 비디오 ID가 다를 수 있음
+          .filter(Boolean);
 
-        setVideos(detailedVideos);
-      } catch (err) {
-        console.log(err);
+        // 비디오 상세 정보와 채널 썸네일 가져오기
+        if (videoIds.length > 0) {
+          const videoDetails = await getVideoDetails(videoIds);
+          const detailedVideos = await addChannelThumbnails(videoDetails);
+          setVideos(detailedVideos);
+        }
+      } catch (error) {
+        console.error('비디오를 가져오지 못했습니다:', error);
       }
     };
 
-    fetchSearchedVideos();
-  }, [searchQuery]);
+    fetchVideos();
+  }, [searchQuery, category]);
+
+  // 채널 썸네일을 각 비디오에 추가하는 함수
+  const addChannelThumbnails = async (videos) => {
+    return await Promise.all(
+      videos.map(async (video) => {
+        const channelData = await getChannelDetails(video.snippet.channelId);
+        return {
+          ...video,
+          channelThumbnail: channelData.snippet.thumbnails.default.url,
+        };
+      }),
+    );
+  };
 
   return (
     <div>
