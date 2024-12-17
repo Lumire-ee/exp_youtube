@@ -9,6 +9,7 @@ const VideoList = ({ videos }) => {
       key={video.id} 
       video={video}
       channelThumbnail={video.channelThumbnail}
+      
       />
     ))}
     </div>
