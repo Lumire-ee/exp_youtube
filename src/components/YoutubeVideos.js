@@ -49,13 +49,15 @@ const YoutubeVideos = ({ searchQuery = '', category = '' }) => {
     } finally {
       setLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, category, videos]);
 
   useEffect(() => {
     setVideos([]);
     setHasMore(true);
     fetchVideos();
-  }, [searchQuery, category, fetchVideos]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, category]);
 
   // 채널 썸네일을 각 비디오에 추가하는 함수
   const addChannelThumbnails = async (videos) => {
@@ -73,7 +75,7 @@ const YoutubeVideos = ({ searchQuery = '', category = '' }) => {
   const loader = useInfiniteScroll(fetchVideos, hasMore);
   return (
     <div>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
         {videos.map((video) => (
           <VideoItem key={video.id.videoId || video.id} video={video} />
         ))}
