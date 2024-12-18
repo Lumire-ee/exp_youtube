@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+
 import Header from './components/Header';
 import Aside from './components/Aside';
 import CategorySlider from './components/CategorySlider';
