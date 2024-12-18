@@ -1,74 +1,75 @@
 import { useEffect, useState } from 'react';
-import { API_KEY, BASE_URL } from './config/api';
-import axios from 'axios';
-import VideoList from './components/VideoList';
-
-
-//video, channel api 추가
-export const getVideosWithChannel = async (params = {}) => {
-  try {
-    const videoresponse = await axios.get(`${BASE_URL}/videos`, {
-      params: {
-        ...params,
-        key: API_KEY,
-      },
-    });
-
-    const videos = videoresponse.data.items;
-
-    const videowithChannels = await Promise.all(
-      videos.map(async (video) => {
-        const channelRespone = await axios.get(`${BASE_URL}/channels`,{
-          params: {
-            part: 'snippet',
-            id: video.snippet.channelId,
-            key: API_KEY,
-          },
-        });
-
-        const channelThumbnail=
-        channelRespone.data.items[0]?.snippet.thumbnails.default.url;
-
-        return {...video, channelThumbnail};
-      })
-    );
-
-    return videowithChannels;
-  } catch (error) {
-    console.error('Failed to fetch data:', error.response?.data || error.message);
-    throw error;
-  }
-};
+import Header from './components/Header';
+import Aside from './components/Aside';
+import CategorySlider from './components/CategorySlider';
+import YoutubeVideos from './components/YoutubeVideos';
 
 function App() {
-  const [videos, setVideos] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('전체');
+  const [searchHistory, setSearchHistory] = useState([]);
 
-
+  // 로컬스토리지에서 검색 기록 불러오기
   useEffect(() => {
-    getVideosWithChannel({
-      part: 'snippet,contentDetails,statistics',
-      chart: 'mostPopular',
-      regionCode: 'KR',
-      maxResults: 30,//영상 갯수 조절
-    })
-      .then((data) => {
-        console.log('videos list', data);
-        setVideos(data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    const savedHistory = JSON.parse(localStorage.getItem('searchHistory'));
+    console.log('검색 기록 불러오기(로컬스토리지):', savedHistory); // DEBUG
+    if (Array.isArray(savedHistory)) {
+      setSearchHistory(savedHistory);
+    } else {
+      // savedHistory가 null 또는 올바르지 않은 형식일 경우 빈 배열로 대체
+      setSearchHistory([]);
+    }
   }, []);
 
-  
+  // 검색 기록 로컬스토리지에 저장
+  useEffect(() => {
+    localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+  }, [searchHistory]);
+
+  // 검색 실행
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setSelectedCategory('');
+
+    if (!searchHistory.includes(query)) {
+      const updatedHistory = [query, ...searchHistory].slice(0, 10);
+      setSearchHistory(updatedHistory);
+    }
+  };
+
+  // 카테고리 선택
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+    setSearchQuery('');
+  };
+
+  // 검색 기록 삭제
+  const handleDeleteHistory = (index) => {
+    const updatedHistory = searchHistory.filter((_, i) => i !== index);
+    setSearchHistory(updatedHistory);
+  };
 
   return (
-  <>
-  <VideoList 
-    videos={videos}
-  />
-
-  </>
+    <div className="flex min-h-screen flex-col">
+      <Header
+        onSearch={handleSearch}
+        searchHistory={searchHistory}
+        onDeleteHistory={handleDeleteHistory}
+        onCategorySelect={handleCategorySelect}
+      />
+      <div className="flex flex-1">
+        <Aside />
+        <div className="flex flex-1 flex-col overflow-hidden">
+          <CategorySlider onCategorySelect={handleCategorySelect} />
+          <div className="flex-1 overflow-auto p-4">
+            <YoutubeVideos
+              searchQuery={searchQuery}
+              category={selectedCategory}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 

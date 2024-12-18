@@ -1,52 +1,83 @@
-import React, { useEffect, useState } from 'react';
-import { searchVideos, getVideoDetails, getChannelDetails } from '../api';
+import React, { useEffect, useState, useCallback } from 'react';
+import {
+  searchVideos,
+  getMostPopularVideos,
+  getVideoDetails,
+  getChannelDetails,
+} from '../api';
 import VideoItem from './VideoItem';
+import useInfiniteScroll from '../hooks/useInfiniteScroll';
 
-const YoutubeVideos = ({ searchQuery = '' }) => {
+const YoutubeVideos = ({ searchQuery = '', category = '' }) => {
   const [videos, setVideos] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const fetchVideos = useCallback(async () => {
+    if (loading) return;
+    setLoading(true);
+    try {
+      let searchResults = [];
+      const pageToken = videos.length > 0 ? videos[videos.length - 1].nextPageToken : '';
+
+      if (searchQuery.trim() !== '') {
+        searchResults = await searchVideos(searchQuery, 20, pageToken);
+      } else if (category && category !== '전체') {
+        searchResults = await searchVideos(category, 20, pageToken);
+      } else {
+        searchResults = await getMostPopularVideos(20, pageToken);
+      }
+
+      const videoIds = searchResults
+        .map((item) => item.id.videoId || item.id)
+        .filter(Boolean);
+
+      if (videoIds.length > 0) {
+        const videoDetails = await getVideoDetails(videoIds);
+        const detailedVideos = await addChannelThumbnails(videoDetails);
+        setVideos(prevVideos => [...prevVideos, ...detailedVideos]);
+        setHasMore(detailedVideos.length === 20);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error('Error fetching videos:', error);
+    } finally {
+      setLoading(false);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, category, videos]);
 
   useEffect(() => {
-    const fetchSearchedVideos = async () => {
-      if (!searchQuery.trim()) {
-        setVideos([]);
-        return;
-      }
+    setVideos([]);
+    setHasMore(true);
+    fetchVideos();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, category]);
 
-      try {
-        // 1. search 엔드포인트로 videoId 목록 가져오기
-        const searchResults = await searchVideos(searchQuery, 30);
-        const videoIds = searchResults.map((item) => item.id.videoId);
+  const addChannelThumbnails = async (videos) => {
+    return await Promise.all(
+      videos.map(async (video) => {
+        const channelData = await getChannelDetails(video.snippet.channelId);
+        return {
+          ...video,
+          channelThumbnail: channelData.snippet.thumbnails.default.url,
+        };
+      }),
+    );
+  };
 
-        // 2. videoId로 videos 엔드포인트 호출
-        const videoDetails = await getVideoDetails(videoIds);
-
-        // 3. 각 videoDetail에 대해 channelId로 채널 썸네일 조회
-        const detailedVideos = await Promise.all(
-          videoDetails.map(async (video) => {
-            const channelId = video.snippet.channelId;
-            const channelData = await getChannelDetails(channelId);
-            const channelThumbnail = channelData.snippet.thumbnails.default.url;
-            return { ...video, channelThumbnail };
-          }),
-        );
-
-        setVideos(detailedVideos);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    fetchSearchedVideos();
-  }, [searchQuery]);
-
+  const loader = useInfiniteScroll(fetchVideos, hasMore);
   return (
     <div>
-      {console.log('비디오 검색결과:', videos)}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {videos.map((video) => (
           <VideoItem key={video.id.videoId || video.id} video={video} />
         ))}
       </div>
+      {loading && <p></p>}
+      {!hasMore && <p>No more videos to load</p>}
+      <div ref={loader} />
     </div>
   );
 };
