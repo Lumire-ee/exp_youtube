@@ -4,24 +4,11 @@ import {
   House,
   Folders,
   CircleUserRound,
-  Menu,
   Play,
   Clock,
   Heart,
   Youtube,
-  Gamepad,
-  Music,
-  Newspaper,
-  Film,
-  Smile,
-  Mic,
-  ChefHat,
-  Settings,
-  AlertTriangle,
-  HelpCircle,
-  Send,
-  AudioLines,
-  UserPlus,
+  Menu,
 } from 'lucide-react';
 
 const MenuSection = ({ title, items, onMenuClick }) => (
@@ -42,14 +29,16 @@ const MenuSection = ({ title, items, onMenuClick }) => (
   </div>
 );
 
-function Sidebar({ onClose, isSidebarOpen }) {
-  const navigate = useNavigate(); // 페이지 이동을 위한 useNavigate
+function Sidebar({ onClose }) {
+  const navigate = useNavigate(); // 수정된 부분: 페이지 이동 기능 추가
 
+  // 메인 메뉴
   const mainMenu = [
     { label: '홈', icon: <House size={20} /> },
-    { label: '구독', icon: <UserPlus size={20} /> },
+    { label: '구독', icon: <Youtube size={20} /> },
   ];
 
+  // 내 페이지 메뉴
   const myPageMenu = [
     { label: '시청 기록', icon: <Play size={20} /> },
     { label: '재생 목록', icon: <Folders size={20} /> },
@@ -58,58 +47,46 @@ function Sidebar({ onClose, isSidebarOpen }) {
     { label: '좋아요 표시한 동영상', icon: <Heart size={20} /> },
   ];
 
+  // 카테고리 메뉴
   const categoriesMenu = [
-    { label: '전체', icon: <Film size={20} /> },
-    { label: '게임', icon: <Gamepad size={20} /> },
-    { label: '음악', icon: <Music size={20} /> },
-    { label: '뉴스', icon: <Newspaper size={20} /> },
-    { label: '믹스', icon: <AudioLines size={20} /> },
-    { label: '시트콤', icon: <Smile size={20} /> },
-    { label: '힙합', icon: <Mic size={20} /> },
-    { label: '요리', icon: <ChefHat size={20} /> },
-  ];
-
-  const settingsMenu = [
-    { label: '설정', icon: <Settings size={20} /> },
-    { label: '신고 기록', icon: <AlertTriangle size={20} /> },
-    { label: '고객센터', icon: <HelpCircle size={20} /> },
-    { label: '의견 보내기', icon: <Send size={20} /> },
+    { label: '전체', icon: <House size={20} /> },
+    { label: '게임', icon: <Play size={20} /> },
+    { label: '음악', icon: <Youtube size={20} /> },
   ];
 
   // 메뉴 클릭 이벤트 핸들러
   const handleMenuClick = (label) => {
     if (label === '내 동영상') {
-      navigate('/'); // MyChannel 페이지로 이동
+      navigate('/'); // 수정된 부분: 내 동영상 클릭 시 페이지 이동
     }
   };
 
   return (
-    <div className="px-3">
+    <div className="w-60 bg-white shadow-lg h-full">
       {/* Sidebar Header */}
-      <div className="mb-3 flex items-center">
-        <button onClick={onClose} className="p-4">
-          <Menu
-            size={24}
-            className="cursor-pointer text-grayDark hover:text-grayDark"
-          />
+      <div className="flex items-center px-4 py-4">
+        <button onClick={onClose} className="mr-4">
+          <Menu size={24} className="text-grayDark" />
         </button>
         <div className="flex items-center">
-          <Youtube size={24} className="cursor-pointer text-red" />
-          <span className="ml-2 text-lg font-semibold text-black">YouTube</span>
+          <Youtube size={24} className="text-red" />
+          <span className="ml-2 text-lg font-semibold text-gray-800">
+            YouTube
+          </span>
         </div>
       </div>
 
       {/* 메뉴 섹션 */}
-      <MenuSection items={mainMenu} onMenuClick={() => {}} />
-      <hr className="mb-4 border-grayLighter" />
+      <MenuSection title="" items={mainMenu} onMenuClick={handleMenuClick} />
+      <hr className="border-grayLighter" />
       <MenuSection title="내 페이지" items={myPageMenu} onMenuClick={handleMenuClick} />
-      <hr className="mb-4 border-grayLighter" />
-      <MenuSection title="카테고리" items={categoriesMenu} onMenuClick={() => {}} />
-      <hr className="mb-4 border-grayLighter" />
-      <MenuSection items={settingsMenu} onMenuClick={() => {}} />
-      <hr className="mb-4 border-grayLighter" />
-      <footer className="px-4 py-2 text-small text-grayDark">
-        대충 회사 정보
+      <hr className="border-grayLighter" />
+      <MenuSection title="카테고리" items={categoriesMenu} onMenuClick={handleMenuClick} />
+      <hr className="border-grayLighter" />
+
+      {/* Footer */}
+      <footer className="p-4 text-sm text-grayDark">
+        © 2024 YouTube Clone
       </footer>
     </div>
   );
