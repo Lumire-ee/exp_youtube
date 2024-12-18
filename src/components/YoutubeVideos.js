@@ -28,10 +28,12 @@ const YoutubeVideos = ({ searchQuery = '', category = '' }) => {
         searchResults = await getMostPopularVideos(20, pageToken);
       }
 
+      // 비디오 ID 추출 및 유효성 필터링
       const videoIds = searchResults
         .map((item) => item.id.videoId || item.id)
         .filter(Boolean);
 
+      // 비디오 상세 정보와 채널 썸네일 가져오기
       if (videoIds.length > 0) {
         const videoDetails = await getVideoDetails(videoIds);
         const detailedVideos = await addChannelThumbnails(videoDetails);
@@ -41,7 +43,7 @@ const YoutubeVideos = ({ searchQuery = '', category = '' }) => {
         setHasMore(false);
       }
     } catch (error) {
-      console.error('Error fetching videos:', error);
+      console.error('비디오를 가져오지 못했습니다:', error);
     } finally {
       setLoading(false);
     }
