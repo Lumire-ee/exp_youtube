@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useCallback } from 'react';
 
 import {
@@ -20,7 +19,8 @@ const YoutubeVideos = ({ searchQuery = '', category = '' }) => {
     setLoading(true);
     try {
       let searchResults = [];
-      const pageToken = videos.length > 0 ? videos[videos.length - 1].nextPageToken : '';
+      const pageToken =
+        videos.length > 0 ? videos[videos.length - 1].nextPageToken : '';
 
       if (searchQuery.trim() !== '') {
         searchResults = await searchVideos(searchQuery, 20, pageToken);
@@ -39,7 +39,7 @@ const YoutubeVideos = ({ searchQuery = '', category = '' }) => {
       if (videoIds.length > 0) {
         const videoDetails = await getVideoDetails(videoIds);
         const detailedVideos = await addChannelThumbnails(videoDetails);
-        setVideos(prevVideos => [...prevVideos, ...detailedVideos]);
+        setVideos((prevVideos) => [...prevVideos, ...detailedVideos]);
         setHasMore(detailedVideos.length === 20);
       } else {
         setHasMore(false);
@@ -49,15 +49,13 @@ const YoutubeVideos = ({ searchQuery = '', category = '' }) => {
     } finally {
       setLoading(false);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, category, videos]);
 
   useEffect(() => {
     setVideos([]);
     setHasMore(true);
     fetchVideos();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery, category]);
+  }, [searchQuery, category, fetchVideos]);
 
   // 채널 썸네일을 각 비디오에 추가하는 함수
   const addChannelThumbnails = async (videos) => {
