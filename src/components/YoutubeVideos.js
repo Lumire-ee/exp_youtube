@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from 'react';
+
+import React, { useEffect, useState, useCallback } from 'react';
+
 import {
   searchVideos,
   getMostPopularVideos,
@@ -6,42 +8,55 @@ import {
   getChannelDetails,
 } from '../api';
 import VideoItem from './VideoItem';
+import useInfiniteScroll from '../hooks/useInfiniteScroll';
 
 const YoutubeVideos = ({ searchQuery = '', category = '' }) => {
   const [videos, setVideos] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const fetchVideos = useCallback(async () => {
+    if (loading) return;
+    setLoading(true);
+    try {
+      let searchResults = [];
+      const pageToken = videos.length > 0 ? videos[videos.length - 1].nextPageToken : '';
+
+      if (searchQuery.trim() !== '') {
+        searchResults = await searchVideos(searchQuery, 20, pageToken);
+      } else if (category && category !== '전체') {
+        searchResults = await searchVideos(category, 20, pageToken);
+      } else {
+        searchResults = await getMostPopularVideos(20, pageToken);
+      }
+
+      // 비디오 ID 추출 및 유효성 필터링
+      const videoIds = searchResults
+        .map((item) => item.id.videoId || item.id)
+        .filter(Boolean);
+
+      // 비디오 상세 정보와 채널 썸네일 가져오기
+      if (videoIds.length > 0) {
+        const videoDetails = await getVideoDetails(videoIds);
+        const detailedVideos = await addChannelThumbnails(videoDetails);
+        setVideos(prevVideos => [...prevVideos, ...detailedVideos]);
+        setHasMore(detailedVideos.length === 20);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error('비디오를 가져오지 못했습니다:', error);
+    } finally {
+      setLoading(false);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, category, videos]);
 
   useEffect(() => {
-    const fetchVideos = async () => {
-      try {
-        let videoIds = [];
-        let searchResults = [];
-
-        // 검색어, 카테고리 또는 인기 비디오를 가져오는 조건
-        if (searchQuery.trim() !== '') {
-          searchResults = await searchVideos(searchQuery, 20);
-        } else if (category && category !== '전체') {
-          searchResults = await searchVideos(category, 20);
-        } else {
-          searchResults = await getMostPopularVideos(20);
-        }
-
-        // 비디오 ID 추출 및 유효성 필터링
-        videoIds = searchResults
-          .map((item) => item.id.videoId || item.id) // 비디오 ID가 다를 수 있음
-          .filter(Boolean);
-
-        // 비디오 상세 정보와 채널 썸네일 가져오기
-        if (videoIds.length > 0) {
-          const videoDetails = await getVideoDetails(videoIds);
-          const detailedVideos = await addChannelThumbnails(videoDetails);
-          setVideos(detailedVideos);
-        }
-      } catch (error) {
-        console.error('비디오를 가져오지 못했습니다:', error);
-      }
-    };
-
+    setVideos([]);
+    setHasMore(true);
     fetchVideos();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, category]);
 
   // 채널 썸네일을 각 비디오에 추가하는 함수
@@ -57,14 +72,17 @@ const YoutubeVideos = ({ searchQuery = '', category = '' }) => {
     );
   };
 
+  const loader = useInfiniteScroll(fetchVideos, hasMore);
   return (
     <div>
-      {console.log('비디오 검색결과:', videos)}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {videos.map((video) => (
           <VideoItem key={video.id.videoId || video.id} video={video} />
         ))}
       </div>
+      {loading && <p></p>}
+      {!hasMore && <p>No more videos to load</p>}
+      <div ref={loader} />
     </div>
   );
 };
