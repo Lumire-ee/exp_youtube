@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-function CategorySlider() {
+function CategorySlider({ onCategorySelect }) {
   const [selectedCategory, setSelectedCategory] = useState('전체');
   const [showArrows, setShowArrows] = useState(false);
   const categoryRef = useRef(null);
@@ -44,6 +44,7 @@ function CategorySlider() {
 
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
+    onCategorySelect(category);
   };
 
   return (
@@ -60,9 +61,9 @@ function CategorySlider() {
         ref={categoryRef}
         className="no-scrollbar flex gap-4 overflow-x-auto scroll-smooth px-3"
       >
-        {categories.map((category, index) => (
+        {categories.map((category) => (
           <button
-            key={index}
+            key={category}
             onClick={() => handleCategoryClick(category)}
             className={`shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-medium ${
               selectedCategory === category

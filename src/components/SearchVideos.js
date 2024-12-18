@@ -31,6 +31,7 @@ function SearchVideos({
       console.log('검색어 전달', searchTerm); // DEBUG
       onSearch(searchTerm);
       setShowHistory(false);
+      setSearchTerm('');
     }
   };
 
