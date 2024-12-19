@@ -1,9 +1,17 @@
 import { useEffect, useState } from 'react';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from 'react-router-dom';
 
 import Header from './components/Header';
 import Aside from './components/Aside';
 import CategorySlider from './components/CategorySlider';
 import YoutubeVideos from './components/YoutubeVideos';
+import MyChannel from './components/MyChannel';
+import MyPage from './components/MyPage';
 
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -53,31 +61,57 @@ function App() {
     setSearchHistory(updatedHistory);
   };
 
-  return (
-    <div className="flex min-h-screen flex-col">
-      <Header
-        onSearch={handleSearch}
-        searchHistory={searchHistory}
-        onDeleteHistory={handleDeleteHistory}
-        onCategorySelect={handleCategorySelect}
-        selectedCategory={selectedCategory}
-      />
-      <div className="flex flex-1">
-        <Aside />
-        <div className="flex flex-1 flex-col overflow-hidden">
+  function MainContent({ children }) {
+    const location = useLocation();
+    const hideCategorySlider =
+      location.pathname === '/my-page' || location.pathname === '/mychannel';
+
+    return (
+      <>
+        {!hideCategorySlider && (
           <CategorySlider
             onCategorySelect={handleCategorySelect}
             selectedCategory={selectedCategory}
           />
-          <div className="flex-1 overflow-auto p-4">
-            <YoutubeVideos
-              searchQuery={searchQuery}
-              category={selectedCategory}
-            />
+        )}
+        {children}
+      </>
+    );
+  }
+
+  return (
+    <Router>
+      <div className="flex min-h-screen flex-col">
+        <Header
+          onSearch={handleSearch}
+          searchHistory={searchHistory}
+          onDeleteHistory={handleDeleteHistory}
+          onCategorySelect={handleCategorySelect}
+          selectedCategory={selectedCategory}
+        />
+        <div className="flex flex-1">
+          <Aside />
+          <div className="flex flex-1 flex-col overflow-hidden">
+            <MainContent>
+              <Routes>
+                <Route
+                  path="/"
+                  element={
+                    <YoutubeVideos
+                      searchQuery={searchQuery}
+                      category={selectedCategory}
+                    />
+                  }
+                ></Route>
+                <Route path="/subscriptions" element={<div>구독 페이지</div>} />
+                <Route path="/my-page" element={<MyPage />} />
+                <Route path="/my-channel" element={<MyChannel />} />
+              </Routes>
+            </MainContent>
           </div>
         </div>
       </div>
-    </div>
+    </Router>
   );
 }
 
