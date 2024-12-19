@@ -4,13 +4,7 @@ import { Menu, Youtube, Search, Bell, User, ArrowLeft } from 'lucide-react';
 import Sidebar from './Sidebar';
 import SearchVideos from './SearchVideos';
 
-function Header({
-  onSearch,
-  searchHistory,
-  onDeleteHistory,
-  onCategorySelect,
-  selectedCategory,
-}) {
+function Header({ onSearch, searchHistory, onDeleteHistory }) {
   const [showSearch, setShowSearch] = useState(false); // 검색창 표시 상태
   const [isLargeScreen, setIsLargeScreen] = useState(false); // 화면 크기 상태
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // 사이드바 표시 상태
@@ -87,8 +81,6 @@ function Header({
         <Sidebar
           isSidebarOpen={isSidebarOpen}
           onClose={() => setIsSidebarOpen(false)}
-          onCategorySelect={onCategorySelect}
-          selectedCategory={selectedCategory}
         />
       </div>
     </>

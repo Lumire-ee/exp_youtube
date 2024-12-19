@@ -23,7 +23,7 @@ import {
   UserPlus,
 } from 'lucide-react';
 
-const MenuSection = ({ title, items, selectedCategory, onCategorySelect }) => (
+const MenuSection = ({ title, items }) => (
   <div className="mb-4">
     {title && <p className="px-4 py-2 text-large text-grayDark">{title}</p>}
     <ul>
@@ -31,7 +31,6 @@ const MenuSection = ({ title, items, selectedCategory, onCategorySelect }) => (
         <li
           key={label}
           className="flex cursor-pointer items-center px-4 py-2 hover:rounded-large hover:bg-gray-100"
-          onClick={() => onCategorySelect(label)}
         >
           <span className="mr-6">{icon}</span>
           <p className="text-medium">{label}</p>
@@ -41,12 +40,7 @@ const MenuSection = ({ title, items, selectedCategory, onCategorySelect }) => (
   </div>
 );
 
-function Sidebar({
-  onClose,
-  isSidebarOpen,
-  onCategorySelect,
-  selectedCategory,
-}) {
+function Sidebar({ onClose, isSidebarOpen }) {
   const mainMenu = [
     { label: '홈', icon: <House size={20} /> },
     { label: '구독', icon: <UserPlus size={20} /> },
@@ -98,12 +92,7 @@ function Sidebar({
       <hr className="mb-4 border-grayLighter" />
       <MenuSection title="내 페이지" items={myPageMenu} />
       <hr className="mb-4 border-grayLighter" />
-      <MenuSection
-        title="카테고리"
-        items={categoriesMenu}
-        selectedCategory={selectedCategory}
-        onCategorySelect={onCategorySelect}
-      />
+      <MenuSection title="카테고리" items={categoriesMenu} />
       <hr className="mb-4 border-grayLighter" />
       <MenuSection items={settingsMenu} />
       <hr className="mb-4 border-grayLighter" />

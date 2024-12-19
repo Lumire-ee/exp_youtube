@@ -57,15 +57,11 @@ function App() {
         searchHistory={searchHistory}
         onDeleteHistory={handleDeleteHistory}
         onCategorySelect={handleCategorySelect}
-        selectedCategory={selectedCategory}
       />
       <div className="flex flex-1">
         <Aside />
         <div className="flex flex-1 flex-col overflow-hidden">
-          <CategorySlider
-            onCategorySelect={handleCategorySelect}
-            selectedCategory={selectedCategory}
-          />
+          <CategorySlider onCategorySelect={handleCategorySelect} />
           <div className="flex-1 overflow-auto p-4">
             <YoutubeVideos
               searchQuery={searchQuery}
