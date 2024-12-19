@@ -1,61 +1,59 @@
 import React, { useEffect, useState } from 'react';
-import { Menu, Youtube, Search, Bell, User, ArrowLeft } from 'lucide-react';
-
+import { Menu, Youtube, Search, Bell, User, Plus } from 'lucide-react'; // ArrowLeft 제거
 import Sidebar from './Sidebar';
 import SearchVideos from './SearchVideos';
 
-function Header({
-  onSearch,
-  searchHistory,
-  onDeleteHistory,
-  onCategorySelect,
-  selectedCategory,
-}) {
-  const [showSearch, setShowSearch] = useState(false); // 검색창 표시 상태
-  const [isLargeScreen, setIsLargeScreen] = useState(false); // 화면 크기 상태
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // 사이드바 표시 상태
+function Header({ onSearch, searchHistory, onDeleteHistory }) {
+  const [showSearch, setShowSearch] = useState(false);
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
-    // 화면 크기 변경 감지
     const handleResize = () => {
-      setIsLargeScreen(window.innerWidth >= 640); // 640px 이상일 때는 큰 화면으로 간주
-      if (window.innerWidth >= 640) {
-        setShowSearch(false); // 큰 화면에서는 검색창을 숨김
-      }
+      setIsLargeScreen(window.innerWidth >= 640);
+      if (window.innerWidth >= 640) setShowSearch(false);
     };
-
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   return (
-    <>
-      <header className="sticky top-0 z-50 flex items-center justify-between bg-white px-4 py-2">
-        <div
-          className={`fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 ${
-            isSidebarOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
-          }`}
-          onClick={() => setIsSidebarOpen(false)}
-        ></div>
+    <div className="sticky top-0 z-50 bg-white">
+      {/* Sidebar Overlay */}
+      <div
+        className={`fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 ${
+          isSidebarOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
+        }`}
+        onClick={() => setIsSidebarOpen(false)}
+      ></div>
 
-        <div className="flex items-center space-x-4">
+      {/* Sidebar Container */}
+      <div
+        className={`fixed left-0 top-0 z-50 h-full w-60 bg-white transition-transform duration-300 ${
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        <Sidebar onClose={() => setIsSidebarOpen(false)} />
+      </div>
+
+      {/* Header */}
+      <header className="relative flex items-center justify-between px-4 py-2">
+        {/* Left Section */}
+        <div className="flex items-center">
           <button onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-            <Menu size={24} className="cursor-pointer text-grayDark" />
+            <Menu size={24} className="mr-4 text-grayDark" />
           </button>
           <div className="flex items-center">
-            <Youtube size={24} className="cursor-pointer text-red" />
-            <span className="ml-2 text-large font-semibold text-black">
+            <Youtube size={24} className="text-red" />
+            <h1 className="ml-2 text-large font-semibold text-black">
               YouTube
-            </span>
+            </h1>
           </div>
         </div>
 
-        {showSearch && !isLargeScreen ? (
-          <button onClick={() => setShowSearch(false)} className="sm:hidden">
-            <ArrowLeft size={24} className="cursor-pointer text-grayDark" />
-          </button>
-        ) : null}
+        {/* Center Section */}
         {isLargeScreen || showSearch ? (
           <SearchVideos
             isLargeScreen={isLargeScreen}
@@ -64,34 +62,65 @@ function Header({
             searchHistory={searchHistory}
             onDeleteHistory={onDeleteHistory}
           />
-        ) : (
-          <button
-            onClick={() => setShowSearch(true)}
-            className="ml-64 sm:hidden"
-          >
-            <Search size={24} className="cursor-pointer text-grayDark" />
-          </button>
-        )}
+        ) : null}
 
-        <div className="flex items-center space-x-4">
-          <Bell size={24} className="cursor-pointer text-darkGray" />
-          <User size={24} className="cursor-pointer text-darkGray" />
+        {/* Right Section */}
+        <div className="relative flex items-center space-x-4">
+          {!isLargeScreen && !showSearch && (
+            <button onClick={() => setShowSearch(true)}>
+              <Search size={24} className="text-grayDark" />
+            </button>
+          )}
+          <Plus size={24} className="cursor-pointer text-grayDark" />
+          <Bell size={24} className="cursor-pointer text-grayDark" />
+          <div className="relative">
+            <User
+              size={24}
+              className="cursor-pointer text-grayDark"
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            />
+            {isDropdownOpen && (
+              <div className="absolute right-0 top-12 w-64 rounded-lg border bg-white shadow-lg">
+                <div className="flex items-center gap-3 border-b p-4">
+                  <User size={40} className="text-grayDark" />
+                  <div>
+                    <p className="font-semibold text-darkGray">사용자1</p>
+                    <p className="text-medium text-grayDark">@사용자1</p>
+                    <button
+                      className="mt-2 text-medium font-medium text-bluePrimary"
+                      onClick={() => (window.location.href = '/my-channel')}
+                    >
+                      내 채널 보기
+                    </button>
+                  </div>
+                </div>
+                <ul>
+                  <li className="cursor-pointer px-4 py-2 hover:bg-white">
+                    Google 계정
+                  </li>
+                  <li className="cursor-pointer px-4 py-2 hover:bg-white">
+                    계정 전환
+                  </li>
+                  <li className="cursor-pointer px-4 py-2 hover:bg-white">
+                    로그아웃
+                  </li>
+                  <hr />
+                  <li className="cursor-pointer px-4 py-2 hover:bg-white">
+                    설정
+                  </li>
+                  <li className="cursor-pointer px-4 py-2 hover:bg-white">
+                    고객센터
+                  </li>
+                  <li className="cursor-pointer px-4 py-2 hover:bg-white">
+                    YouTube 스튜디오
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
       </header>
-
-      {/* Sidebar Container (항상 DOM상에 존재) */}
-      <div
-        className={`fixed left-0 top-0 z-50 h-full w-60 overflow-y-auto bg-white transition-transform duration-300
-      ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
-      >
-        <Sidebar
-          isSidebarOpen={isSidebarOpen}
-          onClose={() => setIsSidebarOpen(false)}
-          onCategorySelect={onCategorySelect}
-          selectedCategory={selectedCategory}
-        />
-      </div>
-    </>
+    </div>
   );
 }
 
