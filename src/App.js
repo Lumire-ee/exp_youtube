@@ -109,7 +109,7 @@ function App() {
                 />
                 <Route path="/subscriptions" element={<div>구독 페이지</div>} />
                 <Route path="/my-page" element={<MyPage />} />
-                <Route path="/mychannel" element={<MyChannel />} /> {/* MyChannel 라우트 추가 */}
+                <Route path="/mychannel" element={<MyChannel />} /> 
               </Routes>
             </MainContent>
           </div>

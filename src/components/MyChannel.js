@@ -6,11 +6,7 @@ import {
   SquarePlay,
   TrendingUp,
   CircleAlert,
-  Image,
-  ChartBarDecreasing,
-  SquareCheckBig,
   SquarePen,
-  Upload,
   X,
 } from 'lucide-react';
 
@@ -65,18 +61,17 @@ function MyChannel() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="relative h-60 bg-gray-200 rounded-t-[30px] rounded-b-[30px] overflow-hidden mx-auto max-w-[95%]">
+      <div className="relative h-60 bg-gray-200 rounded-[30px] overflow-hidden mx-auto max-w-[95%]">
         <img
           src="/banner-placeholder.jpg"
           alt="Banner"
-          className="h-full w-full object-cover rounded-t-[30px] rounded-b-[30px]"
+          className="h-full w-full object-cover rounded-[30px]"
         />
       </div>
 
-      <div className="flex items-center px-6 py-6 mt-4">
-        <div
-          className="size-32 rounded-full border-4 border-white bg-gray-200 flex items-center justify-center cursor-pointer">
-          <UserRound size={80} className="text-gray-600" /> {/* 아이콘 크기 증가 */}
+      <div className="flex items-center p-6 mt-4">
+        <div className="size-32 rounded-full border-4 border-white bg-gray-200 flex items-center justify-center cursor-pointer">
+          <UserRound size={80} className="text-gray-600" />
         </div>
         <div className="ml-8">
           <h1 className="text-4xl font-bold text-gray-800">사용자1</h1>
@@ -111,7 +106,6 @@ function MyChannel() {
 
       {activeTab === '홈' && (
         <div className="p-6">
-          {/* 추천 섹션 */}
           <section>
             <h2 className="text-xl font-semibold mb-4">추천</h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -249,7 +243,7 @@ function MyChannel() {
       )}
 
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="bg-white rounded-lg w-96 p-6 relative">
             <button
               className="absolute top-4 right-4 text-gray-600 hover:text-black"
