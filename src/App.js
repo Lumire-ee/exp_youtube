@@ -8,7 +8,6 @@ import YoutubeVideos from './components/YoutubeVideos';
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('전체');
-  const [selectedCategory, setSelectedCategory] = useState('전체');
   const [searchHistory, setSearchHistory] = useState([]);
 
   // 로컬스토리지에서 검색 기록 불러오기
@@ -40,11 +39,7 @@ function App() {
     }
   };
 
-  // 카테고리 선택
-  const handleCategorySelect = (category) => {
-    setSelectedCategory(category);
-    setSearchQuery('');
-  };
+ 
 
   // 카테고리 선택
   const handleCategorySelect = (category) => {
@@ -65,19 +60,15 @@ function App() {
         searchHistory={searchHistory}
         onDeleteHistory={handleDeleteHistory}
         onCategorySelect={handleCategorySelect}
-        onCategorySelect={handleCategorySelect}
+        selectedCategory={selectedCategory}
       />
       <div className="flex flex-1">
         <Aside />
         <div className="flex flex-1 flex-col overflow-hidden">
-          <CategorySlider onCategorySelect={handleCategorySelect} />
-          <div className="flex-1 overflow-auto p-4">
-            <YoutubeVideos
-              searchQuery={searchQuery}
-              category={selectedCategory}
-            />
-          </div>
-          <CategorySlider onCategorySelect={handleCategorySelect} />
+          <CategorySlider
+            onCategorySelect={handleCategorySelect}
+            selectedCategory={selectedCategory}
+          />
           <div className="flex-1 overflow-auto p-4">
             <YoutubeVideos
               searchQuery={searchQuery}

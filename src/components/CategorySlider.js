@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-function CategorySlider({ onCategorySelect }) {
-  const [selectedCategory, setSelectedCategory] = useState('전체');
+function CategorySlider({ onCategorySelect, selectedCategory }) {
   const [showArrows, setShowArrows] = useState(false);
   const categoryRef = useRef(null);
 
@@ -43,7 +42,6 @@ function CategorySlider({ onCategorySelect }) {
   };
 
   const handleCategoryClick = (category) => {
-    setSelectedCategory(category);
     onCategorySelect(category);
   };
 
