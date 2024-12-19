@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-
+//비디오 무한 스크롤
 const useInfiniteScroll = (callback, hasMore) => {
   const loader = useRef(null);
 

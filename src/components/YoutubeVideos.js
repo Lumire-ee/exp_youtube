@@ -13,6 +13,7 @@ const YoutubeVideos = ({ searchQuery = '', category = '' }) => {
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
 
+  // 비디오 콜백 함수
   const fetchVideos = useCallback(async () => {
     if (loading) return;
     setLoading(true);
@@ -22,11 +23,11 @@ const YoutubeVideos = ({ searchQuery = '', category = '' }) => {
         videos.length > 0 ? videos[videos.length - 1].nextPageToken : '';
 
       if (searchQuery.trim() !== '') {
-        searchResults = await searchVideos(searchQuery, 20, pageToken);
+        searchResults = await searchVideos(searchQuery, 5, pageToken);
       } else if (category && category !== '전체') {
-        searchResults = await searchVideos(category, 20, pageToken);
+        searchResults = await searchVideos(category, 5, pageToken);
       } else {
-        searchResults = await getMostPopularVideos(20, pageToken);
+        searchResults = await getMostPopularVideos(5, pageToken);
       }
 
       // 비디오 ID 추출 및 유효성 필터링
@@ -39,7 +40,7 @@ const YoutubeVideos = ({ searchQuery = '', category = '' }) => {
         const videoDetails = await getVideoDetails(videoIds);
         const detailedVideos = await addChannelThumbnails(videoDetails);
         setVideos((prevVideos) => [...prevVideos, ...detailedVideos]);
-        setHasMore(detailedVideos.length === 20);
+        setHasMore(detailedVideos.length === 5);
       } else {
         setHasMore(false);
       }

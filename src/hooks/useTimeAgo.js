@@ -1,4 +1,4 @@
-// hooks/useTimeAgo.js
+// 업로드 날짜 변환
 const useTimeAgo = (dateString) => {
     const now = new Date();
     const publishedDate = new Date(dateString);
@@ -6,14 +6,14 @@ const useTimeAgo = (dateString) => {
     if (isNaN(publishedDate.getTime())) {
       return 'Invalid date';
     }
-  
+    //날짜 단위 변환
     const diffInSeconds = Math.max(0, (now - publishedDate) / 1000);
     const secondsInMinute = 60;
     const secondsInHour = 60 * secondsInMinute;
     const secondsInDay = 24 * secondsInHour;
     const secondsInMonth = 30 * secondsInDay;
     const secondsInYear = 365 * secondsInDay;
-  
+  //업로드 날짜 기준 지정
     if (diffInSeconds < secondsInMinute) {
       return `방금 전`;
     } else if (diffInSeconds < secondsInHour) {
