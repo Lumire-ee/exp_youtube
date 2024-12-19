@@ -1,7 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+html,
 body {
   @apply font-roboto;
+  overscroll-behavior: none; /* 스크롤 바운스 방지 */
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE/Edge */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+  /* Chonre, Safari */
 }
